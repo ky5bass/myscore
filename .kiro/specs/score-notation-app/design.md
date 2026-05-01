@@ -108,9 +108,9 @@ OSのIMEを使わず、アプリ内でローマ字入力をカタカナに変換
 
 ```typescript
 interface IMEEngine {
-  // キーストロークを受け取り、確定したPitchNameがあれば返す
+  // キーストロークを受け取り、確定したNoteNameがあれば返す
   // 確定しない場合は null を返す
-  feed(key: string): PitchName | null;
+  feed(key: string): NoteName | null;
   // 現在の未確定バッファをリセット
   reset(): void;
   // 現在の未確定入力バッファ（表示用）
@@ -118,9 +118,9 @@ interface IMEEngine {
 }
 ```
 
-有効なPitchNameとローマ字マッピング:
+有効なNoteNameとローマ字マッピング:
 
-| PitchName | ローマ字シーケンス |
+| NoteName | ローマ字シーケンス |
 |---|---|
 | ド | do |
 | ノ | no |
@@ -215,14 +215,13 @@ interface FileIOService {
 
 ```typescript
 // 音名（15種類）
-type PitchName =
+type NoteName =
   | 'ド' | 'ノ' | 'レ' | 'ネ' | 'ミ' | 'ハ' | 'バ'
   | 'ソ' | 'ゾ' | 'ラ' | 'ジ' | 'シ'  // 12音
-  | 'x' | 'ー' | 'ッ';                  // SpecialPitch
+  | 'x' | 'ー' | 'ッ';                  // SpecialNote
 
 // 特殊音（オクターブ概念なし）
-type SpecialPitch = 'x' | 'ー' | 'ッ';
-
+type SpecialNote = 'x' | 'ー' | 'ッ';
 // 音価
 type NoteValue =
   | 'whole'        // 全音符
@@ -254,8 +253,8 @@ const NOTE_VALUE_UNITS: Record<NoteValue, number> = {
 interface MelodyCell {
   id: string;
   noteValue: NoteValue;
-  pitchName: PitchName | null;  // null = 未記入
-  octave: number | null;        // SpecialPitchの場合はnull（A1=1, C6=6）
+  noteName: NoteName | null;  // null = 未記入
+  octave: number | null;      // SpecialNoteの場合はnull（A1=1, C6=6）
 }
 
 // セル（TextTrack用）
@@ -304,14 +303,14 @@ interface Project {
 }
 ```
 
-### VerticalOffset 計算モデル
+### Pitch計算モデル
 
-音高（PitchName + octave）から縦方向オフセット（ピクセル）を算出する。
+Pitch（NoteName + octave）から縦方向オフセット（ピクセル）を算出する。
 
 ```typescript
 // 対応音域: A1〜C6（計52音）
 // 半音ステップ数（C1=0 を基準）
-const PITCH_SEMITONE: Record<Exclude<PitchName, SpecialPitch>, number> = {
+const PITCH_SEMITONE: Record<Exclude<NoteName, SpecialNote>, number> = {
   'ド': 0,  // C
   'ノ': 1,  // C#/Db
   'レ': 2,  // D
@@ -365,11 +364,11 @@ interface ClipboardData {
 ### コマンド一覧
 
 ```typescript
-// PitchName設定
+// NoteName設定
 interface SetPitchCommand extends Command {
   trackId: string;
   cellId: string;
-  newPitch: PitchName | null;
+  newPitch: NoteName | null;
   newOctave: number | null;
 }
 
@@ -443,23 +442,23 @@ interface DuplicateTrackCommand extends Command {
 
 ### プロパティ4: セルの時間軸位置不変性
 
-*任意の* 操作（PitchName入力・NoteValue変更・トラック追加削除・コピーペースト）の後も、操作対象外のセルのBar上の位置（barIndex）は変化しない。
+*任意の* 操作（NoteName入力・NoteValue変更・トラック追加削除・コピーペースト）の後も、操作対象外のセルのBar上の位置（barIndex）は変化しない。
 
 **検証対象: 要件1.11**
 
 ---
 
-### プロパティ5: IMEエンジンのローマ字→PitchName変換
+### プロパティ5: IMEエンジンのローマ字→NoteName変換
 
-*任意の* 有効なローマ字シーケンス（do, no, re, ne, mi, ha, ba, so, zo, ra, zi/ji, si/shi, x, -, tsu/tu）に対して、IMEエンジンは対応するPitchNameを返す。また、いずれのPitchNameにも対応しないシーケンスに対してはnullを返す。
+*任意の* 有効なローマ字シーケンス（do, no, re, ne, mi, ha, ba, so, zo, ra, zi/ji, si/shi, x, -, tsu/tu）に対して、IMEエンジンは対応するNoteNameを返す。また、いずれのNoteNameにも対応しないシーケンスに対してはnullを返す。
 
 **検証対象: 要件2.2, 2.5**
 
 ---
 
-### プロパティ6: PitchName表示のカタカナ統一
+### プロパティ6: NoteName表示のカタカナ統一
 
-*任意の* PitchName（12音）に対して、MelodyTrackのセルに表示される文字はカタカナである。xは半角で表示される。
+*任意の* NoteName（12音）に対して、MelodyTrackのセルに表示される文字はカタカナである。xは半角で表示される。
 
 **検証対象: 要件2.4**
 
@@ -467,13 +466,13 @@ interface DuplicateTrackCommand extends Command {
 
 ### プロパティ7: VerticalOffsetの単調性
 
-*任意の* 2つの音高（PitchName + octave）に対して、音高が高い方のVerticalOffsetは低い方のVerticalOffsetより小さい（上方向）。また、音域（A1〜C6）内の全ての音高は互いに異なるVerticalOffsetを持つ。
+*任意の* 2つのPitch（NoteName + octave）に対して、Pitchが高い方のVerticalOffsetは低い方のVerticalOffsetより小さい（上方向）。また、音域（A1〜C6）内の全てのPitchは互いに異なるVerticalOffsetを持つ。
 
 **検証対象: 要件3.1, 3.2, 3.3, 3.4**
 
 ---
 
-### プロパティ8: SpecialPitch（ー・ッ）のVerticalOffset継承
+### プロパティ8: SpecialNote（ー・ッ）のVerticalOffset継承
 
 *任意の* セル列において、ー または ッ のVerticalOffsetは、そのセルより前に存在する最後の12音またはxのVerticalOffsetと等しい。前に12音またはxが存在しない場合は固定位置（VerticalOffset=0）となる。
 
@@ -483,7 +482,7 @@ interface DuplicateTrackCommand extends Command {
 
 ### プロパティ9: OctaveShiftの適用と音域クランプ
 
-*任意の* PitchName（SpecialPitchを除く）とoctaveに対して、OctaveShiftを適用した結果のoctaveは音域（A1〜C6）の範囲内にクランプされる。上方向ドラッグは+1、下方向ドラッグは-1を適用し、範囲外の場合は上限または下限に丸める。
+*任意の* NoteName（SpecialNoteを除く）とoctaveに対して、OctaveShiftを適用した結果のoctaveは音域（A1〜C6）の範囲内にクランプされる。上方向ドラッグは+1、下方向ドラッグは-1を適用し、範囲外の場合は上限または下限に丸める。
 
 **検証対象: 要件4.1, 4.2, 4.5**
 
@@ -491,7 +490,7 @@ interface DuplicateTrackCommand extends Command {
 
 ### プロパティ10: NoteValue変更後のセル総量保存
 
-*任意の* トラックとNoteValue変更操作に対して、変更前後でトラック全体の「音価単位の合計」は変化しない。長い音価への変更では後続セルが吸収され、短い音価への変更では新規セルが追加されるが、合計音価単位数は保存される。また、変更対象セルのPitchNameは変更前後で同一である。
+*任意の* トラックとNoteValue変更操作に対して、変更前後でトラック全体の「音価単位の合計」は変化しない。長い音価への変更では後続セルが吸収され、短い音価への変更では新規セルが追加されるが、合計音価単位数は保存される。また、変更対象セルのNoteNameは変更前後で同一である。
 
 **検証対象: 要件5.5, 5.6, 5.7, 5.8, 5.9**
 
@@ -563,7 +562,7 @@ interface DuplicateTrackCommand extends Command {
 |---|---|
 | 無効なローマ字シーケンス | IMEエンジンがバッファをリセット。セルを移動しない（要件2.5） |
 | 音域外のOctaveShift | 上限/下限にクランプ（要件4.5） |
-| SpecialPitchへのドラッグ | 操作を無視（要件4.6） |
+| SpecialNoteへのドラッグ | 操作を無視（要件4.6） |
 | TrackType不一致のペースト | 操作を無視（要件11.9） |
 
 ### Undo/Redoエラー
@@ -604,12 +603,12 @@ interface DuplicateTrackCommand extends Command {
 
 | コンポーネント | ユニットテスト | プロパティテスト |
 |---|---|---|
-| IMEEngine | 各PitchNameの変換例・無効シーケンス | プロパティ5 |
-| VerticalOffset計算 | SpecialPitchの固定位置・音域境界値 | プロパティ7, 8 |
+| IMEEngine | 各NoteNameの変換例・無効シーケンス | プロパティ5 |
+| VerticalOffset計算 | SpecialNoteの固定位置・音域境界値 | プロパティ7, 8 |
 | NoteValue幅計算 | 各NoteValueの具体的なピクセル幅 | プロパティ1 |
 | GridModel（SystemBreak） | DefaultSystemBreak=4の初期値 | プロパティ2, 3, 4 |
 | GridModel（NoteValue変更） | 吸収・分割の具体例 | プロパティ10, 11 |
-| OctaveShift | SpecialPitchへのドラッグ無効 | プロパティ9 |
+| OctaveShift | SpecialNoteへのドラッグ無効 | プロパティ9 |
 | Serializer/Deserializer | 不正JSONのエラー例 | プロパティ12, 13 |
 | BackupService | 36世代の境界値 | プロパティ14 |
 | UndoStack | 空スタックへのUndo/Redo | プロパティ15 |

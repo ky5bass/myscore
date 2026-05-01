@@ -15,12 +15,13 @@
 - **Cell**: 音符1つ分を表す最小単位のマス
 - **NoteValue**: 音符の種類（全音符・2分音符・4分音符・8分音符・16分音符・32分音符・2分3連符・4分3連符・8分3連符・16分3連符）。セルの横幅に対応する
 - **CurrentNoteValue**: 現在選択中の音価モード。トラックへの新規入力時に使用されるNoteValue
-- **PitchName**: 音名。ド・ノ・レ・ネ・ミ・ハ・バ・ソ・ゾ・ラ・ジ・シ の12音と、音階のない特殊音 x・ー・ッ の計15種類。入力時にオクターブ番号は含まない
-- **SpecialPitch**: 音階のない特殊音（x・ー・ッ）。オクターブの概念を持たない。x はドラッグ不可の固定位置表示。ー と ッ はドラッグ不可で、そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetに揃えて表示する
-- **VerticalOffset**: 音高に応じたセルの縦方向の表示位置
+- **Pitch**: Pitch。NoteNameとオクターブ番号の組み合わせで決まる絶対的な音の高さ。SpecialNoteにはPitchの概念はない
+- **NoteName**: 音名。ド・ノ・レ・ネ・ミ・ハ・バ・ソ・ゾ・ラ・ジ・シ の12音と、音階のない特殊音 x・ー・ッ の計15種類。入力時にオクターブ番号は含まない
+- **SpecialNote**: 音階のない特殊音（x・ー・ッ）。オクターブの概念を持たない。x はドラッグ不可の固定位置表示。ー と ッ はドラッグ不可で、そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetに揃えて表示する
+- **VerticalOffset**: Pitchに応じたセルの縦方向の表示位置
 - **OctaveShift**: ドラッグ操作によるオクターブの上下変更
 - **Track**: グリッド内の1行に対応する入力レーン。メロディトラックまたはテキストトラックのいずれか
-- **MelodyTrack**: 1セルに1つのPitchNameを入力でき、音高に応じて縦方向に表示位置がずれるトラック
+- **MelodyTrack**: 1セルに1つのNoteNameを入力でき、Pitchに応じて縦方向に表示位置がずれるトラック
 - **TextTrack**: 1セルに複数文字のテキストを入力でき、縦方向の表示位置がずれないトラック
 - **Bar**: 小節。拍子に基づいた時間軸上の区切り単位
 - **BarLine**: 小節の境界を示す太線
@@ -59,16 +60,16 @@
 #### 受け入れ基準
 
 1. WHEN ユーザーがMelodyTrackのCellをダブルクリックする, THE App SHALL そのCellをアクティブ状態（入力モード）にする
-2. WHEN Cellがアクティブであるとき, THE App SHALL ローマ字かな入力によるキー入力を受け付け、有効なPitchName（ド・ノ・レ・ネ・ミ・ハ・バ・ソ・ゾ・ラ・ジ・シ・x・ー・ッ のいずれか）が確定した時点で変換キーを押すことなく即座にそのCellに記録する
-3. WHEN PitchNameがCellに記録される, THE App SHALL IMEの変換・確定操作を介さず、記録と同時に自動的に次のCellをアクティブにする
+2. WHEN Cellがアクティブであるとき, THE App SHALL ローマ字かな入力によるキー入力を受け付け、有効なNoteName（ド・ノ・レ・ネ・ミ・ハ・バ・ソ・ゾ・ラ・ジ・シ・x・ー・ッ のいずれか）が確定した時点で変換キーを押すことなく即座にそのCellに記録する
+3. WHEN NoteNameがCellに記録される, THE App SHALL IMEの変換・確定操作を介さず、記録と同時に自動的に次のCellをアクティブにする
 4. THE App SHALL MelodyTrackのCellに表示する文字をカタカナに統一する（ひらがな入力状態であってもカタカナで表示する。x は半角で表示する）
-5. WHEN 入力されたキーシーケンスがいずれのPitchNameにも対応しない, THE App SHALL その入力を取り消しCellを移動しない
+5. WHEN 入力されたキーシーケンスがいずれのNoteNameにも対応しない, THE App SHALL その入力を取り消しCellを移動しない
 6. WHEN ユーザーがアクティブなCellでスペースキーを押す, THE App SHALL そのCellを未記入のまま次のCellをアクティブにする
 7. WHEN 入力モード中にユーザーがTabキーまたはSpaceキーを押す, THE App SHALL 現在のCellを確定して次のCellをアクティブにする
 8. WHEN 入力モード中にユーザーがShift+Tabキーを押す, THE App SHALL 現在のCellを確定して前のCellをアクティブにする
 9. WHEN 入力モード中にユーザーが矢印キーを押す, THE App SHALL その入力を無視する
 10. WHEN 入力モード中にユーザーがEscキーを押す, THE App SHALL 入力モードを終了しCellの選択状態を維持する
-11. WHEN 入力モード中にユーザーがDeleteキーを押し、かつCellにPitchNameが記入されている, THE App SHALL そのPitchNameを消去して未記入にする（Cellの移動は発生しない）
+11. WHEN 入力モード中にユーザーがDeleteキーを押し、かつCellにNoteNameが記入されている, THE App SHALL そのNoteNameを消去して未記入にする（Cellの移動は発生しない）
 12. WHEN 入力モード中にユーザーがDeleteキーを押し、かつCellが未記入である, THE App SHALL 1つ前のCellへ移動しその内容を消去して未記入にする
 13. WHEN 入力モードではなくCellが選択されている状態でユーザーがTabキーまたは右矢印キーを押す, THE App SHALL 次のCellを選択する
 14. WHEN 入力モードではなくCellが選択されている状態でユーザーがShift+Tabキーまたは左矢印キーを押す, THE App SHALL 前のCellを選択する
@@ -78,19 +79,19 @@
 
 ---
 
-### 要件3: 音高に応じた縦方向表示
+### 要件3: Pitchに応じた縦方向表示
 
-**ユーザーストーリー:** 音楽家として、入力した音名が音高に応じて上下にずれて表示されることを望む。そうすることで、グリッドを見るだけで音の高低を視覚的に把握できる。
+**ユーザーストーリー:** 音楽家として、入力した音名がPitchに応じて上下にずれて表示されることを望む。そうすることで、グリッドを見るだけで音の高低を視覚的に把握できる。
 
 #### 受け入れ基準
 
-1. WHEN PitchNameがMelodyTrackのCellに記録される, THE App SHALL PitchNameのオクターブと音名からVerticalOffsetを算出する
+1. WHEN NoteNameがMelodyTrackのCellに記録される, THE App SHALL NoteNameのオクターブと音名からVerticalOffsetを算出する
 2. THE App SHALL VerticalOffsetに基づいてCellのテキストを縦方向にずらして表示する
-3. THE App SHALL 音高が高いほど上方向、低いほど下方向にVerticalOffsetを設定する
-4. THE App SHALL 対応音域（A1〜C6）の全音高を視覚的に識別できる十分なVerticalOffsetの範囲を確保する
-5. WHEN CellのPitchNameがSpecialPitch（x）である, THE App SHALL VerticalOffsetを適用せず固定位置に表示する
-6. WHEN CellのPitchNameがSpecialPitch（ー または ッ）である, THE App SHALL そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetと同じ縦方向位置に表示する
-7. IF CellのPitchNameがSpecialPitch（ー または ッ）であり、そのCellより前に12音またはxが存在しない, THEN THE App SHALL VerticalOffsetを適用せず固定位置に表示する
+3. THE App SHALL Pitchが高いほど上方向、低いほど下方向にVerticalOffsetを設定する
+4. THE App SHALL 対応音域（A1〜C6）の全Pitchを視覚的に識別できる十分なVerticalOffsetの範囲を確保する
+5. WHEN CellのNoteNameがSpecialNote（x）である, THE App SHALL VerticalOffsetを適用せず固定位置に表示する
+6. WHEN CellのNoteNameがSpecialNote（ー または ッ）である, THE App SHALL そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetと同じ縦方向位置に表示する
+7. IF CellのNoteNameがSpecialNote（ー または ッ）であり、そのCellより前に12音またはxが存在しない, THEN THE App SHALL VerticalOffsetを適用せず固定位置に表示する
 
 ---
 
@@ -100,12 +101,12 @@
 
 #### 受け入れ基準
 
-1. WHEN ユーザーがMelodyTrackのCellのPitchNameを上方向にドラッグする, THE App SHALL そのPitchNameのオクターブを1つ上げる
-2. WHEN ユーザーがMelodyTrackのCellのPitchNameを下方向にドラッグする, THE App SHALL そのPitchNameのオクターブを1つ下げる
+1. WHEN ユーザーがMelodyTrackのCellのNoteNameを上方向にドラッグする, THE App SHALL そのNoteNameのオクターブを1つ上げる
+2. WHEN ユーザーがMelodyTrackのCellのNoteNameを下方向にドラッグする, THE App SHALL そのNoteNameのオクターブを1つ下げる
 3. WHEN ユーザーがドラッグ操作中（左クリック押下中）である, THE App SHALL OctaveShiftを未確定のままグレー表示で仮の縦方向位置をプレビュー表示する
 4. WHEN ユーザーがドラッグ操作を完了する（左クリックを離す）, THE App SHALL OctaveShiftを確定してVerticalOffsetを更新し再描画する
 5. IF ドラッグ操作が対応音域（A1〜C6）の範囲外に相当する位置まで行われる, THEN THE App SHALL 音域の上限または下限のオクターブに丸めてOctaveShiftを適用する
-6. WHEN CellのPitchNameがSpecialPitch（x・ー・ッ のいずれか）である, THE App SHALL ドラッグによるOctaveShift操作を受け付けない
+6. WHEN CellのNoteNameがSpecialNote（x・ー・ッ のいずれか）である, THE App SHALL ドラッグによるOctaveShift操作を受け付けない
 
 ---
 
@@ -120,10 +121,10 @@
 3. WHEN ユーザーがCurrentNoteValueを変更する, THE App SHALL 以降の新規入力セルに変更後のNoteValueを適用する
 4. THE App SHALL 入力モード中（Cellがアクティブな状態）はCurrentNoteValueの変更操作を受け付けない
 5. WHEN ユーザーが既存のCellのNoteValueを長い音価に変更する（例：16分音符→4分音符）, THE App SHALL 操作したCellの直後から音価の差分に相当する数のCellを吸収して削除し、それより後のCellの時間軸位置を変えない
-6. WHEN 吸収されるCellに入力済みのPitchNameが存在する, THE App SHALL そのPitchNameを消去する
+6. WHEN 吸収されるCellに入力済みのNoteNameが存在する, THE App SHALL そのNoteNameを消去する
 7. WHEN ユーザーが既存のCellのNoteValueを短い音価に変更する（例：4分音符→16分音符）, THE App SHALL 操作したCellを分割し、音価の比率から算出した数の新規Cellを直後に追加する
 8. WHEN 分割によって追加されたCellが作成される, THE App SHALL そのCellを未記入状態にする
-9. WHEN 既存のCellのNoteValueが変更される, THE App SHALL 操作したCellの内容（PitchName）を変更前と同じ状態で保持する
+9. WHEN 既存のCellのNoteValueが変更される, THE App SHALL 操作したCellの内容（NoteName）を変更前と同じ状態で保持する
 10. WHEN 既存のCellのNoteValueが変更される, THE App SHALL 変更後16ミリ秒以内にグリッドレイアウトを更新する
 
 ---
@@ -137,8 +138,8 @@
 1. THE App SHALL MelodyTrackとTextTrackの2種類のトラックをサポートする
 2. WHEN ユーザーがトラックを追加する, THE App SHALL MelodyTrackまたはTextTrackのいずれかを選択できる手段を提供する
 3. WHEN MelodyTrackが作成される, THE App SHALL CurrentNoteValueを8分音符に設定する
-4. THE MelodyTrack SHALL 1つのCellに対してPitchNameの記入または未記入のみを許容する
-5. THE TextTrack SHALL 1つのCellに対してPitchName以外のテキストを2文字以上含む入力を許容する
+4. THE MelodyTrack SHALL 1つのCellに対してNoteNameの記入または未記入のみを許容する
+5. THE TextTrack SHALL 1つのCellに対してNoteName以外のテキストを2文字以上含む入力を許容する
 6. WHILE TextTrackのCellにテキストが表示される, THE App SHALL VerticalOffsetを適用せず固定位置に表示する
 7. THE App SHALL 複数のTrackを同時に画面上に表示する
 
@@ -168,7 +169,7 @@
 
 #### 受け入れ基準
 
-1. WHEN ユーザーがPitchNameを入力する, THE App SHALL 入力から16ミリ秒以内に画面を更新する
+1. WHEN ユーザーがNoteNameを入力する, THE App SHALL 入力から16ミリ秒以内に画面を更新する
 2. WHEN ユーザーがOctaveShiftのドラッグを行う, THE App SHALL ドラッグ中の各フレームを16ミリ秒以内に再描画する
 3. WHEN ユーザーがNoteValueを変更する, THE App SHALL 変更から16ミリ秒以内にグリッドレイアウトを更新する
 4. THE App SHALL グリッドのセル数が100000を超える場合でも、上記のパフォーマンス基準を維持する
@@ -200,7 +201,7 @@
 
 1. WHEN ユーザーがUndo操作を実行する, THE App SHALL 直前の操作を取り消してグリッドを1つ前の状態に戻す
 2. WHEN ユーザーがRedo操作を実行する, THE App SHALL 直前のUndo操作を取り消してグリッドを1つ後の状態に戻す
-3. THE App SHALL PitchNameの入力・変更・削除をUndo/Redoの対象操作として記録する
+3. THE App SHALL NoteNameの入力・変更・削除をUndo/Redoの対象操作として記録する
 4. THE App SHALL OctaveShiftをUndo/Redoの対象操作として記録する
 5. THE App SHALL NoteValueの変更をUndo/Redoの対象操作として記録する
 6. THE App SHALL トラックの追加・削除をUndo/Redoの対象操作として記録する
