@@ -474,7 +474,7 @@ interface DuplicateTrackCommand extends Command {
 
 ### プロパティ8: SpecialNoteName（ー・ッ）のVerticalOffset継承
 
-*任意の* セル列において、ー または ッ のVerticalOffsetは、そのセルより前に存在する最後の12音またはxのVerticalOffsetと等しい。前に12音またはxが存在しない場合は固定位置（VerticalOffset=0）となる。
+*任意の* セル列において、ー または ッ のVerticalOffsetは、PrecedingNoteName（ー・ッ除く）のVerticalOffsetと等しい。PrecedingNoteName（ー・ッ除く）が存在しない場合は固定位置（VerticalOffset=0）となる。
 
 **検証対象: 要件3.6, 3.7**
 

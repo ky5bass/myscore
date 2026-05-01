@@ -18,6 +18,7 @@
 - **Pitch**: NoteNameとオクターブ番号の組み合わせで決まる絶対的な音の高さ。SpecialNoteNameにはPitchの概念はない
 - **NoteName**: 音名。ド・ノ・レ・ネ・ミ・ハ・バ・ソ・ゾ・ラ・ジ・シ の12音と、音階のない特殊音 x・ー・ッ の計15種類。入力時にオクターブ番号は含まない
 - **SpecialNoteName**: 音階のない特殊音（x・ー・ッ）。オクターブの概念を持たない。x はドラッグ不可の固定位置表示。ー と ッ はドラッグ不可で、そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetに揃えて表示する
+- **PrecedingNoteName**: あるCellより前にあるCellのうち、最後に登場するNoteName。除外対象を括弧で明示して使用する（例：PrecedingNoteName（ー・ッ除く）= 12音またはx、PrecedingNoteName（SpecialNoteName除く）= 12音のみ）
 - **VerticalOffset**: Pitchに応じたセルの縦方向の表示位置
 - **OctaveShift**: ドラッグ操作によるオクターブの上下変更
 - **Track**: グリッド内の1行に対応する入力レーン。メロディトラックまたはテキストトラックのいずれか
@@ -90,8 +91,8 @@
 3. THE App SHALL Pitchが高いほど上方向、低いほど下方向にVerticalOffsetを設定する
 4. THE App SHALL 対応音域（A1〜C6）の全Pitchを視覚的に識別できる十分なVerticalOffsetの範囲を確保する
 5. WHEN CellのNoteNameがSpecialNoteName（x）である, THE App SHALL VerticalOffsetを適用せず固定位置に表示する
-6. WHEN CellのNoteNameがSpecialNoteName（ー または ッ）である, THE App SHALL そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetと同じ縦方向位置に表示する
-7. IF CellのNoteNameがSpecialNoteName（ー または ッ）であり、そのCellより前に12音またはxが存在しない, THEN THE App SHALL VerticalOffsetを適用せず固定位置に表示する
+6. WHEN CellのNoteNameがSpecialNoteName（ー または ッ）である, THE App SHALL PrecedingNoteName（ー・ッ除く）のVerticalOffsetと同じ縦方向位置に表示する
+7. IF CellのNoteNameがSpecialNoteName（ー または ッ）であり、PrecedingNoteName（ー・ッ除く）が存在しない, THEN THE App SHALL VerticalOffsetを適用せず固定位置に表示する
 
 ---
 
