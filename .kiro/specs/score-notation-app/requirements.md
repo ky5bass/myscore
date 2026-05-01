@@ -80,17 +80,17 @@
 
 ---
 
-### 要件2b: オクターブ自動決定
+### 要件2b: MelodyTrackにおけるオクターブ自動決定
 
-**ユーザーストーリー:** 音楽家として、NoteNameを入力するだけでオクターブが文脈に応じて自動的に決まってほしい。そうすることで、オクターブを意識せずに素早く入力できる。
+**ユーザーストーリー:** 音楽家として、MelodyTrackのセルにNoteNameを入力するだけでオクターブが文脈に応じて自動的に決まってほしい。そうすることで、オクターブを意識せずに素早く入力できる。
 
 #### 受け入れ基準
 
-1. WHEN プレフィックスなしでNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchとの移動距離（半音数）が最小になるオクターブを決定する
-2. WHEN 上方向プレフィックス（`/`）に続けてNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchより上で、かつ移動距離が最小になるオクターブを決定する
-3. WHEN 下方向プレフィックス（`¥`）に続けてNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchより下で、かつ移動距離が最小になるオクターブを決定する
-4. WHEN プレフィックスなしで上下の移動距離が等しい場合, THE App SHALL そのトラック全体のNoteName（SpecialNoteName除く）の平均Pitchとの差が小さくなるオクターブを決定する
-5. IF PrecedingNoteName（SpecialNoteName除く）が存在しない（トラックの最初の入力）, THEN THE App SHALL デフォルトオクターブ（4）を使用してPitchを決定する
+1. WHEN 上方向プレフィックス（`/`）に続けてNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchより上で、かつ移動距離が最小になるオクターブを決定する
+2. WHEN 下方向プレフィックス（`¥`）に続けてNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchより下で、かつ移動距離が最小になるオクターブを決定する
+3. WHEN プレフィックスなしでNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchとの移動距離（半音数）が最小になるオクターブを決定する
+4. WHEN プレフィックスなしで上下の移動距離が等しい場合, THE App SHALL そのトラック全体のNoteName（SpecialNoteName除く）の平均Pitchとの差が小さくなるオクターブを優先し、それでも決定できない場合は基準5を適用する
+5. WHEN 上記の規則によってオクターブが一意に決定できない場合（移動距離が等しい・平均Pitchとの距離も等しい・PrecedingNoteNameが存在しない等）, THE App SHALL バ4（F#4）に最も近いPitchになるオクターブを決定する
 6. IF 決定されたオクターブが対応音域（A1〜C6）の範囲外になる, THEN THE App SHALL 音域の上限または下限のオクターブに丸める
 
 ---
