@@ -91,7 +91,7 @@ sequenceDiagram
     participant CanvasRenderer
 
     User->>InputHandler: キー入力
-    InputHandler->>CommandBus: dispatch(SetPitchCommand)
+    InputHandler->>CommandBus: dispatch(SetNoteNameCommand)
     CommandBus->>UndoStack: push(command)
     UndoStack->>ProjectStore: command.execute(state)
     ProjectStore-->>CanvasRenderer: 状態変更通知
@@ -115,6 +115,8 @@ interface IMEEngine {
   reset(): void;
   // 現在の未確定入力バッファ（表示用）
   readonly pending: string;
+  // 現在のオクターブ方向プレフィックス（'up' = /、'down' = ¥、null = なし）
+  readonly octaveDirectionPrefix: 'up' | 'down' | null;
 }
 ```
 
@@ -364,12 +366,12 @@ interface ClipboardData {
 ### コマンド一覧
 
 ```typescript
-// NoteName設定
-interface SetPitchCommand extends Command {
+// NoteName設定（オクターブは自動決定済みの値を受け取る）
+interface SetNoteNameCommand extends Command {
   trackId: string;
   cellId: string;
-  newPitch: NoteName | null;
-  newOctave: number | null;
+  newNoteName: NoteName | null;
+  newOctave: number | null;  // SpecialNoteNameの場合はnull
 }
 
 // OctaveShift
@@ -544,6 +546,38 @@ interface DuplicateTrackCommand extends Command {
 
 ---
 
+### プロパティ17: オクターブ自動決定の音域クランプ
+
+*任意の* NoteName（SpecialNoteNameを除く）と文脈（PrecedingNoteName・プレフィックス）に対して、オクターブ自動決定の結果は常に対応音域（A1〜C6）の範囲内に収まる。
+
+**検証対象: 要件2b.6**
+
+---
+
+### プロパティ18: プレフィックスなし入力の最小移動距離
+
+*任意の* PrecedingNoteName（SpecialNoteName除く）のPitchとプレフィックスなしのNoteName入力に対して、決定されたオクターブによるPitchとPrecedingNoteNameのPitchとの移動距離（半音数）は、音域内の他のいかなるオクターブによる移動距離以下である。
+
+**検証対象: 要件2b.3**
+
+---
+
+### プロパティ19: 上方向プレフィックス入力の方向保証
+
+*任意の* PrecedingNoteName（SpecialNoteName除く）のPitchと上方向プレフィックス（`/`）付きのNoteName入力に対して、決定されたPitchはPrecedingNoteNameのPitchより高い（または音域上限にクランプされた場合は上限と等しい）。
+
+**検証対象: 要件2b.1**
+
+---
+
+### プロパティ20: 下方向プレフィックス入力の方向保証
+
+*任意の* PrecedingNoteName（SpecialNoteName除く）のPitchと下方向プレフィックス（`¥`）付きのNoteName入力に対して、決定されたPitchはPrecedingNoteNameのPitchより低い（または音域下限にクランプされた場合は下限と等しい）。
+
+**検証対象: 要件2b.2**
+
+---
+
 ## エラーハンドリング
 
 ### ファイルI/Oエラー
@@ -603,7 +637,8 @@ interface DuplicateTrackCommand extends Command {
 
 | コンポーネント | ユニットテスト | プロパティテスト |
 |---|---|---|
-| IMEEngine | 各NoteNameの変換例・無効シーケンス | プロパティ5 |
+| IMEEngine | 各NoteNameの変換例・無効シーケンス・プレフィックス認識 | プロパティ5 |
+| OctaveResolver | プレフィックスなし/上/下の具体例・バ4フォールバック例 | プロパティ17, 18, 19, 20 |
 | VerticalOffset計算 | SpecialNoteNameの固定位置・音域境界値 | プロパティ7, 8 |
 | NoteValue幅計算 | 各NoteValueの具体的なピクセル幅 | プロパティ1 |
 | GridModel（SystemBreak） | DefaultSystemBreak=4の初期値 | プロパティ2, 3, 4 |
