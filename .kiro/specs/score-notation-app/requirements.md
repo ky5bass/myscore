@@ -15,9 +15,9 @@
 - **Cell**: 音符1つ分を表す最小単位のマス
 - **NoteValue**: 音符の種類（全音符・2分音符・4分音符・8分音符・16分音符・32分音符・2分3連符・4分3連符・8分3連符・16分3連符）。セルの横幅に対応する
 - **CurrentNoteValue**: 現在選択中の音価モード。トラックへの新規入力時に使用されるNoteValue
-- **Pitch**: Pitch。NoteNameとオクターブ番号の組み合わせで決まる絶対的な音の高さ。SpecialNoteにはPitchの概念はない
+- **Pitch**: Pitch。NoteNameとオクターブ番号の組み合わせで決まる絶対的な音の高さ。SpecialNoteNameにはPitchの概念はない
 - **NoteName**: 音名。ド・ノ・レ・ネ・ミ・ハ・バ・ソ・ゾ・ラ・ジ・シ の12音と、音階のない特殊音 x・ー・ッ の計15種類。入力時にオクターブ番号は含まない
-- **SpecialNote**: 音階のない特殊音（x・ー・ッ）。オクターブの概念を持たない。x はドラッグ不可の固定位置表示。ー と ッ はドラッグ不可で、そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetに揃えて表示する
+- **SpecialNoteName**: 音階のない特殊音（x・ー・ッ）。オクターブの概念を持たない。x はドラッグ不可の固定位置表示。ー と ッ はドラッグ不可で、そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetに揃えて表示する
 - **VerticalOffset**: Pitchに応じたセルの縦方向の表示位置
 - **OctaveShift**: ドラッグ操作によるオクターブの上下変更
 - **Track**: グリッド内の1行に対応する入力レーン。メロディトラックまたはテキストトラックのいずれか
@@ -89,9 +89,9 @@
 2. THE App SHALL VerticalOffsetに基づいてCellのテキストを縦方向にずらして表示する
 3. THE App SHALL Pitchが高いほど上方向、低いほど下方向にVerticalOffsetを設定する
 4. THE App SHALL 対応音域（A1〜C6）の全Pitchを視覚的に識別できる十分なVerticalOffsetの範囲を確保する
-5. WHEN CellのNoteNameがSpecialNote（x）である, THE App SHALL VerticalOffsetを適用せず固定位置に表示する
-6. WHEN CellのNoteNameがSpecialNote（ー または ッ）である, THE App SHALL そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetと同じ縦方向位置に表示する
-7. IF CellのNoteNameがSpecialNote（ー または ッ）であり、そのCellより前に12音またはxが存在しない, THEN THE App SHALL VerticalOffsetを適用せず固定位置に表示する
+5. WHEN CellのNoteNameがSpecialNoteName（x）である, THE App SHALL VerticalOffsetを適用せず固定位置に表示する
+6. WHEN CellのNoteNameがSpecialNoteName（ー または ッ）である, THE App SHALL そのCellより前にあるCellのうち最後に登場する12音またはxのVerticalOffsetと同じ縦方向位置に表示する
+7. IF CellのNoteNameがSpecialNoteName（ー または ッ）であり、そのCellより前に12音またはxが存在しない, THEN THE App SHALL VerticalOffsetを適用せず固定位置に表示する
 
 ---
 
@@ -106,7 +106,7 @@
 3. WHEN ユーザーがドラッグ操作中（左クリック押下中）である, THE App SHALL OctaveShiftを未確定のままグレー表示で仮の縦方向位置をプレビュー表示する
 4. WHEN ユーザーがドラッグ操作を完了する（左クリックを離す）, THE App SHALL OctaveShiftを確定してVerticalOffsetを更新し再描画する
 5. IF ドラッグ操作が対応音域（A1〜C6）の範囲外に相当する位置まで行われる, THEN THE App SHALL 音域の上限または下限のオクターブに丸めてOctaveShiftを適用する
-6. WHEN CellのNoteNameがSpecialNote（x・ー・ッ のいずれか）である, THE App SHALL ドラッグによるOctaveShift操作を受け付けない
+6. WHEN CellのNoteNameがSpecialNoteName（x・ー・ッ のいずれか）である, THE App SHALL ドラッグによるOctaveShift操作を受け付けない
 
 ---
 
