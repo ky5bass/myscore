@@ -80,13 +80,28 @@
 
 ---
 
+### 要件2b: オクターブ自動決定
+
+**ユーザーストーリー:** 音楽家として、NoteNameを入力するだけでオクターブが文脈に応じて自動的に決まってほしい。そうすることで、オクターブを意識せずに素早く入力できる。
+
+#### 受け入れ基準
+
+1. WHEN プレフィックスなしでNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchとの移動距離（半音数）が最小になるオクターブを決定する
+2. WHEN 上方向プレフィックス（`/`）に続けてNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchより上で、かつ移動距離が最小になるオクターブを決定する
+3. WHEN 下方向プレフィックス（`¥`）に続けてNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchより下で、かつ移動距離が最小になるオクターブを決定する
+4. WHEN プレフィックスなしで上下の移動距離が等しい場合, THE App SHALL そのトラック全体のNoteName（SpecialNoteName除く）の平均Pitchとの差が小さくなるオクターブを決定する
+5. IF PrecedingNoteName（SpecialNoteName除く）が存在しない（トラックの最初の入力）, THEN THE App SHALL デフォルトオクターブ（4）を使用してPitchを決定する
+6. IF 決定されたオクターブが対応音域（A1〜C6）の範囲外になる, THEN THE App SHALL 音域の上限または下限のオクターブに丸める
+
+---
+
 ### 要件3: Pitchに応じた縦方向表示
 
 **ユーザーストーリー:** 音楽家として、入力したNoteNameがPitchに応じて上下にずれて表示されることを望む。そうすることで、グリッドを見るだけで音の高低を視覚的に把握できる。
 
 #### 受け入れ基準
 
-1. WHEN NoteNameがMelodyTrackのCellに記録される, THE App SHALL NoteNameのオクターブとNoteNameからVerticalOffsetを算出する
+1. WHEN NoteNameがMelodyTrackのCellに記録される, THE App SHALL 要件2bで決定されたオクターブとNoteNameからVerticalOffsetを算出する
 2. THE App SHALL VerticalOffsetに基づいてCellのテキストを縦方向にずらして表示する
 3. THE App SHALL Pitchが高いほど上方向、低いほど下方向にVerticalOffsetを設定する
 4. THE App SHALL 対応音域（A1〜C6）の全Pitchを視覚的に識別できる十分なVerticalOffsetの範囲を確保する
