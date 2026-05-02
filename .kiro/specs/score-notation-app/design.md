@@ -169,8 +169,8 @@ interface CellRef {
 
 // OctaveShiftドラッグ中のプレビュー状態
 interface DragPreviewState {
-  cellRef: CellRef;         // ドラッグ中のセル
-  previewOctave: number;    // 仮のオクターブ値（未確定）
+  cellRefs: CellRef[];      // ドラッグ中の対象セル（複数セル選択に対応）
+  previewOctaveDelta: number; // 仮のオクターブ変化量（未確定）
 }
 
 // ヒットテスト結果
@@ -374,11 +374,11 @@ interface SetNoteNameCommand extends Command {
   newOctave: number | null;  // SpecialNoteNameの場合はnull
 }
 
-// OctaveShift
+// OctaveShift（複数セル対応・複数オクターブ対応）
 interface OctaveShiftCommand extends Command {
   trackId: string;
-  cellId: string;
-  delta: 1 | -1;
+  cellIds: string[];  // 対象セルのID一覧（複数セル選択に対応）
+  delta: number;      // オクターブ変化量（正=上、負=下、複数オクターブ可）
 }
 
 // NoteValue変更（セルの吸収・分割を含む）
@@ -482,11 +482,11 @@ interface DuplicateTrackCommand extends Command {
 
 ---
 
-### プロパティ9: OctaveShiftの適用と音域クランプ
+### プロパティ9: OctaveShiftの適用と音域制約
 
-*任意の* NoteName（SpecialNoteNameを除く）とoctaveに対して、OctaveShiftを適用した結果のoctaveは音域（A1〜C6）の範囲内にクランプされる。上方向ドラッグは+1、下方向ドラッグは-1を適用し、範囲外の場合は上限または下限に丸める。
+*任意の* NoteName（SpecialNoteNameを除く）のセル群とオクターブ変化量に対して、OctaveShiftを適用した結果は以下を満たす。(1) SpecialNoteNameのセルはスキップされる。(2) 複数セル選択時は全セルに同一の変化量が適用される。(3) 変化量はCell群の中で音域（A1〜C6）の制約が最も厳しいCellによって上限が決まり、結果として全セルのoctaveは音域内に収まる。
 
-**検証対象: 要件4.1, 4.2, 4.5**
+**検証対象: 要件4.2, 4.3, 4.4, 4.5, 4.6**
 
 ---
 
@@ -595,8 +595,8 @@ interface DuplicateTrackCommand extends Command {
 | エラー種別 | 対応 |
 |---|---|
 | 無効なローマ字シーケンス | IMEエンジンがバッファをリセット。セルを移動しない（要件2.5） |
-| 音域外のOctaveShift | 上限/下限にクランプ（要件4.5） |
-| SpecialNoteNameへのドラッグ | 操作を無視（要件4.6） |
+| 音域外のOctaveShift | Cell群の制約が最も厳しいCellで変化量の上限を決定（要件4.5） |
+| SpecialNoteNameのドラッグ | そのCellをスキップして残りのCellに適用（要件4.6） |
 | TrackType不一致のペースト | 操作を無視（要件11.9） |
 
 ### Undo/Redoエラー
