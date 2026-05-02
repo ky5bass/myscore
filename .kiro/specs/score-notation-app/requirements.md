@@ -173,7 +173,7 @@
 2. WHEN TextTrackのCellが編集モードである, THE App SHALL 任意の文字列（複数文字含む）の入力・編集・削除を受け付ける
 3. WHEN 編集モード中にユーザーがEnterキーを押す, THE App SHALL 入力内容を確定して編集モードを終了し、Cellの移動は発生しない
 4. WHEN 編集モード中にユーザーがTabキーを押す, THE App SHALL 入力内容を確定して次のCellを選択する
-5. WHEN 編集モード中にユーザーがShift+Tabキーを押す, THE App SHALL 前のCellを選択する
+5. WHEN 編集モード中にユーザーがShift+Tabキーを押す, THE App SHALL 入力内容を確定して前のCellを選択する
 6. WHEN 編集モード中にユーザーがEscキーを押す, THE App SHALL 入力内容を破棄して編集前の内容に戻し編集モードを終了する
 7. WHEN 編集モードではなくCellが選択されている状態でユーザーが文字キーを入力する, THE App SHALL そのCellを編集モードにして入力内容で既存の内容を上書きする
 8. WHEN 編集モードではなくCellが選択されている状態でユーザーがEnterキーまたはF2キーを押す, THE App SHALL そのCellを編集モードにして既存の内容を保持したままカーソルを末尾に表示する
