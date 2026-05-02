@@ -223,10 +223,13 @@
 4. THE App SHALL OctaveShiftをUndo/Redoの対象操作として記録する
 5. THE App SHALL NoteValueの変更をUndo/Redoの対象操作として記録する
 6. THE App SHALL トラックの追加・削除をUndo/Redoの対象操作として記録する
-7. IF Undo可能な操作が存在しない, THEN THE App SHALL Undo操作を無視する
-8. IF Redo可能な操作が存在しない, THEN THE App SHALL Redo操作を無視する
-9. WHEN 新たな操作が実行される, THE App SHALL それ以降のRedo履歴を破棄する
-10. WHEN Undo/Redo操作が実行される, THE App SHALL 16ミリ秒以内に画面を更新する
+7. THE App SHALL TextTrackのCellへのテキスト入力・変更・削除をUndo/Redoの対象操作として記録する
+8. THE App SHALL コピー・ペースト・複製操作をUndo/Redoの対象操作として記録する
+9. THE App SHALL DefaultSystemBreakおよびLocalSystemBreakの変更をUndo/Redoの対象操作として記録する
+10. IF Undo可能な操作が存在しない, THEN THE App SHALL Undo操作を無視する
+11. IF Redo可能な操作が存在しない, THEN THE App SHALL Redo操作を無視する
+12. WHEN 新たな操作が実行される, THE App SHALL それ以降のRedo履歴を破棄する
+13. WHEN Undo/Redo操作が実行される, THE App SHALL 16ミリ秒以内に画面を更新する
 
 ---
 
@@ -248,4 +251,3 @@
 10. THE App SHALL MelodyTrackのCell範囲をTextTrackへペーストする操作を許容しない（逆も同様）
 11. THE App SHALL トラックの複製操作を提供する
 12. WHEN ユーザーがトラックを複製する, THE App SHALL 同一内容の新しいTrackをそのTrackの直下に追加する
-13. THE App SHALL コピー・ペースト・複製操作をUndo/Redoの対象として記録する
