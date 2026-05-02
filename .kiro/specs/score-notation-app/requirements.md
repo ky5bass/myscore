@@ -113,16 +113,18 @@
 
 ### 要件4: オクターブのドラッグ変更
 
-**ユーザーストーリー:** 音楽家として、表示されているNoteNameをドラッグしてオクターブを変更したい。そうすることで、1オクターブずれた場合にキーボードを使わず直感的に修正できる。
+**ユーザーストーリー:** 音楽家として、表示されているNoteNameをドラッグしてオクターブを変更したい。そうすることで、キーボードを使わず直感的にオクターブを修正できる。
 
 #### 受け入れ基準
 
-1. WHEN ユーザーがMelodyTrackのCellのNoteNameを上方向にドラッグする, THE App SHALL そのNoteNameのオクターブを1つ上げる
-2. WHEN ユーザーがMelodyTrackのCellのNoteNameを下方向にドラッグする, THE App SHALL そのNoteNameのオクターブを1つ下げる
-3. WHEN ユーザーがドラッグ操作中（左クリック押下中）である, THE App SHALL OctaveShiftを未確定のままグレー表示で仮の縦方向位置をプレビュー表示する
+1. WHEN ユーザーがMelodyTrackのCellのNoteNameを上方向にドラッグする, THE App SHALL ドラッグ量に応じたオクターブ数だけそのNoteNameのオクターブを上げる
+2. WHEN ユーザーがMelodyTrackのCellのNoteNameを下方向にドラッグする, THE App SHALL ドラッグ量に応じたオクターブ数だけそのNoteNameのオクターブを下げる
+3. WHEN ユーザーがドラッグ操作中（左クリック押下中）である, THE App SHALL OctaveShiftを未確定のまま選択中の全CellをグレーでプレビューしてVerticalOffsetの仮位置を表示する
 4. WHEN ユーザーがドラッグ操作を完了する（左クリックを離す）, THE App SHALL OctaveShiftを確定してVerticalOffsetを更新し再描画する
-5. IF ドラッグ操作が対応音域（A1〜C6）の範囲外に相当する位置まで行われる, THEN THE App SHALL 音域の上限または下限のオクターブに丸めてOctaveShiftを適用する
-6. WHEN CellのNoteNameがSpecialNoteName（x・ー・ッ のいずれか）である, THE App SHALL ドラッグによるOctaveShift操作を受け付けない
+5. WHEN 複数のCellが選択されている状態でOctaveShiftを適用する, THE App SHALL 選択中の全Cellに同一のオクターブ変化量を適用し、変化量は選択中のCell群の中で音域（A1〜C6）の制約が最も厳しいCellによって上限が決まる
+6. WHEN Cellが入力モードである, THE App SHALL ドラッグによるOctaveShift操作を受け付けない
+7. WHEN 複数のCellが選択されている状態でドラッグによるOctaveShift操作を実行する, THE App SHALL 選択中の全CellにOctaveShiftを適用する
+8. WHEN OctaveShiftを適用する際、一部のCellのNoteNameがSpecialNoteNameである, THE App SHALL そのCellをスキップして残りのCellのみOctaveShiftを適用する
 
 ---
 
