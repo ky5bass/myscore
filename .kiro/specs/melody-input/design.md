@@ -141,6 +141,13 @@ interface SetNoteNameCommand extends Command {
 
 下方向プレフィックス付き入力の結果PitchはPrecedingNoteNameのPitchより低い。
 
+## エラーハンドリング
+
+| エラー種別 | 対応 |
+|---|---|
+| 無効なローマ字シーケンス | IMEエンジンがバッファをリセット。セルを移動しない |
+| PrecedingNoteNameが存在しない | バ4（F#4）に最も近いオクターブをフォールバックとして使用 |
+
 ## テスト方針
 
 | 種別 | 対象 |
