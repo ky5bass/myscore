@@ -87,6 +87,7 @@ Kiro が行う処理:
 
 - 全タスク完了の確認
 - コードと spec の整合性レビュー
+- `requirements.md` と `design.md` にバージョン番号を付与（初回: v1.0、更新時: v1.0 → v1.1）
 - `docs/requirements-spec.md` の spec 一覧を更新
 - `task.md` の削除
 
@@ -101,8 +102,8 @@ Kiro が行う処理:
 
 - 新機能・大きな設計変更は新しい Issue を作成する
 - 既存 spec への小さな修正・調整は既存 Issue へのコメントでよい
-- 「どの spec に属するかわからない」場合は新しい Issue を作成して Kiro に相談する
 - sub-issue は使わない（管理が複雑になるため）
+- 「どの spec に属するかわからない」場合は新しい Issue を作成して Kiro に相談する
 - `requirements.md` のメタ情報セクションに Issue URL を記載することで、spec と Issue を紐づける
 
 ---
