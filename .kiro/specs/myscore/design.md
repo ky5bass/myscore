@@ -409,6 +409,23 @@ interface PasteCommand extends Command {
 interface DuplicateTrackCommand extends Command {
   trackId: string;
 }
+
+// TextTrackテキスト編集
+interface SetTextCommand extends Command {
+  trackId: string;
+  cellId: string;
+  newText: string;
+}
+
+// SystemBreak変更
+interface ChangeDefaultSystemBreakCommand extends Command {
+  newValue: number;
+}
+
+interface ChangeLocalSystemBreakCommand extends Command {
+  systemIndex: number;
+  newValue: number | null;  // null = LocalSystemBreakを解除
+}
 ```
 
 
@@ -534,7 +551,7 @@ interface DuplicateTrackCommand extends Command {
 
 *任意の* 操作シーケンスに対して、全ての操作をUndoした後にRedoすると元の状態に戻る。また、新たな操作を実行した後はRedo履歴が空になる。
 
-**検証対象: 要件10.1, 10.2, 10.9**
+**検証対象: 要件10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 10.9, 10.12**
 
 ---
 
@@ -603,8 +620,8 @@ interface DuplicateTrackCommand extends Command {
 
 | エラー種別 | 対応 |
 |---|---|
-| Undoスタックが空 | 操作を無視（要件10.7） |
-| Redoスタックが空 | 操作を無視（要件10.8） |
+| Undoスタックが空 | 操作を無視（要件10.10） |
+| Redoスタックが空 | 操作を無視（要件10.11） |
 
 ---
 
@@ -646,7 +663,7 @@ interface DuplicateTrackCommand extends Command {
 | OctaveShift | SpecialNoteNameへのドラッグ無効 | プロパティ9 |
 | Serializer/Deserializer | 不正JSONのエラー例 | プロパティ12, 13 |
 | BackupService | 36世代の境界値 | プロパティ14 |
-| UndoStack | 空スタックへのUndo/Redo | プロパティ15 |
+| UndoStack | 空スタックへのUndo/Redo・TextTrack編集のUndo・SystemBreak変更のUndo | プロパティ15 |
 | ClipboardService | TrackType一致・不一致の具体例 | プロパティ16 |
 
 ### ユニットテストの注力点
