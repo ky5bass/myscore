@@ -92,6 +92,13 @@ interface OctaveShiftCommand extends Command {
 2. 複数セル選択時は全セルに同一の変化量が適用される
 3. 変化量はCell群の中で音域（A1〜C6）の制約が最も厳しいCellによって上限が決まり、全セルのoctaveは音域内に収まる
 
+## エラーハンドリング
+
+| エラー種別 | 対応 |
+|---|---|
+| 音域外のOctaveShift | Cell群の制約が最も厳しいCellで変化量の上限を決定 |
+| SpecialNoteNameのドラッグ | そのCellをスキップして残りのCellに適用 |
+
 ## テスト方針
 
 | 種別 | 対象 |
