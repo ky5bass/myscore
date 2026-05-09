@@ -28,8 +28,8 @@
 
 1. WHEN 上方向プレフィックス（`/`）に続けてNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchより上で最小移動距離のオクターブを決定する
 2. WHEN 下方向プレフィックス（`¥`）に続けてNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchより下で最小移動距離のオクターブを決定する
-3. WHEN プレフィックスなしでNoteNameが入力される, THE App SHALL PrecedingNoteNameのPitchとの移動距離（半音数）が最小になるオクターブを決定する
-4. WHEN プレフィックスなしで上下の移動距離が等しい場合, THE App SHALL トラック全体の平均Pitchとの差が小さくなるオクターブを優先し、それでも決定できない場合はバ4（F#4）に最も近いPitchを選択する
+3. WHEN プレフィックスなしでNoteNameが入力される, THE App SHALL PrecedingNoteName（SpecialNoteName除く）のPitchとの移動距離（半音数）が最小になるオクターブを決定する
+4. WHEN プレフィックスなしで上下の移動距離が等しい場合, THE App SHALL そのトラック全体のNoteName（SpecialNoteName除く）の平均Pitchとの差が小さくなるオクターブを優先し、それでも決定できない場合はバ4（F#4）に最も近いPitchを選択する
 5. WHEN 上記の規則でオクターブが一意に決定できない場合, THE App SHALL バ4（F#4）に最も近いPitchになるオクターブを決定する
 6. IF 決定されたオクターブが対応音域（A1〜C6）の範囲外になる, THEN THE App SHALL 音域の上限または下限に丸める
 
