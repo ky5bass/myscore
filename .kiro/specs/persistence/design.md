@@ -92,7 +92,7 @@ interface ChangeDefaultSystemBreakCommand extends Command {
 
 interface ChangeLocalSystemBreakCommand extends Command {
   systemIndex: number;
-  newValue: number | null;
+  newValue: number | null;  // null = LocalSystemBreakを解除
 }
 ```
 
