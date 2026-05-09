@@ -103,6 +103,7 @@ Kiro が行う処理:
 - 新機能・大きな設計変更は新しい Issue を作成する
 - 既存 spec への小さな修正・調整は既存 Issue へのコメントでよい
 - sub-issue は使わない（管理が複雑になるため）
+- Issue には対象の spec を明記する。複数 spec にまたがる場合は分割を検討する
 - 「どの spec に属するかわからない」場合は新しい Issue を作成して Kiro に相談する
 - `requirements.md` のメタ情報セクションに Issue URL を記載することで、spec と Issue を紐づける
 
